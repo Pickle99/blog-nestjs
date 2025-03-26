@@ -21,6 +21,22 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  private generateAccessToken(user: User) {
+    const payload = { username: user.username, id: user.id };
+    return this.jwtService.sign(payload, {
+      secret: 'secretkeyofmine',
+      expiresIn: '1h',
+    });
+  }
+
+  // private generateRefreshToken(user: User) {
+  //   const payload = { username: user.username, sub: user.id };
+  //   return this.jwtService.sign(payload, {
+  //     secret: 'refresh-secret-key',
+  //     expiresIn: '2d',
+  //   });
+  // }
+
   async signup(signupRequest: SignupDto) {
     const existingUser = await this.userRepository.findOne({
       where: { username: signupRequest.username },
@@ -41,8 +57,7 @@ export class AuthService {
     await this.userRepository.save(newUser);
 
     // Generate JWT token
-    const payload = { username: newUser.username, id: newUser.id };
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.generateAccessToken(newUser);
 
     return {
       message: 'User created successfully',
@@ -56,10 +71,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new HttpException(
-        'Invalid username or password',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Invalid username or password');
     }
 
     const passwordMatch = await bcrypt.compare(
@@ -68,19 +80,18 @@ export class AuthService {
     );
 
     if (!passwordMatch) {
-      throw new HttpException(
-        'Invalid username or password',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Invalid username or password');
     }
 
-    // Generate JWT token
-    const payload = { username: user.username, id: user.id };
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.generateAccessToken(user);
 
     return {
       message: 'User logged in successfully',
-      accessToken,
+      access_token: accessToken,
     };
   }
+
+  // async bad(loginRequest) {
+  //   return '2';
+  // }
 }

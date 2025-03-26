@@ -6,13 +6,7 @@ import { User } from 'src/users/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [
-    JwtModule.register({
-      secret: 'babakakaSecret',
-      signOptions: { expiresIn: '4h' },
-    }),
-    TypeOrmModule.forFeature([User]),
-  ],
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [AuthController],
   providers: [AuthService],
 })
