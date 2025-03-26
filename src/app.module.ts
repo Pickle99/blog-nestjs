@@ -1,30 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { BlogsModule } from './blogs/blogs.module';
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        database: configService.get('DB_NAME'),
-        autoLoadEntities: true,
-        synchronize: configService.getOrThrow('DB_SYNCHRONIZE'),
-        // do not use true in synchronize in prod, since it can cause data loss
-      }),
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
     BlogsModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

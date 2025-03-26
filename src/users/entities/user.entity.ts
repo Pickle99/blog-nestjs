@@ -12,4 +12,8 @@ export class User {
 
   @Column({ type: 'varchar', length: 255 })
   password: string;
+
+  constructor(user: Partial<User>) {
+    Object.assign(this, user);
+  }
 }
