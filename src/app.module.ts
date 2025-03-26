@@ -4,14 +4,15 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
+import { dataSourceOptions } from 'database/data-source';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
     BlogsModule,
-    DatabaseModule,
+    TypeOrmModule.forRoot(dataSourceOptions),
   ],
   controllers: [AppController],
   providers: [AppService],
