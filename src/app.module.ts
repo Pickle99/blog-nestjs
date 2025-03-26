@@ -6,6 +6,7 @@ import { BlogsModule } from './blogs/blogs.module';
 import { ConfigModule } from '@nestjs/config';
 import { dataSourceOptions } from 'database/data-source';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     UsersModule,
     BlogsModule,
     TypeOrmModule.forRoot(dataSourceOptions),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
