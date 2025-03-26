@@ -1,2 +1,2 @@
 ## Requirements
-Node >20
+Node >=20
