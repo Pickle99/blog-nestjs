@@ -29,14 +29,6 @@ export class AuthService {
     });
   }
 
-  // private generateRefreshToken(user: User) {
-  //   const payload = { username: user.username, sub: user.id };
-  //   return this.jwtService.sign(payload, {
-  //     secret: 'refresh-secret-key',
-  //     expiresIn: '2d',
-  //   });
-  // }
-
   async signup(signupRequest: SignupDto) {
     const existingUser = await this.userRepository.findOne({
       where: { username: signupRequest.username },
@@ -70,8 +62,15 @@ export class AuthService {
       where: { username: loginRequest.username },
     });
 
-    if (!user) {
-      throw new BadRequestException('Invalid username or password');
+    // if (!user) {
+    //   throw new BadRequestException('Invalid username or password');
+    // }
+
+    if (loginRequest.username !== user?.username) {
+      throw new HttpException(
+        'Invalid username or password',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const passwordMatch = await bcrypt.compare(
@@ -80,7 +79,10 @@ export class AuthService {
     );
 
     if (!passwordMatch) {
-      throw new BadRequestException('Invalid username or password');
+      throw new HttpException(
+        'Invalid username or password',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const accessToken = this.generateAccessToken(user);
