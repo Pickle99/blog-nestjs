@@ -11,7 +11,7 @@ export class SignupDto {
   @IsString({ message: 'First name must be a string' })
   @MinLength(4, { message: 'First name must be at least 4 characters long' })
   @MaxLength(24, { message: 'First name cannot exceed 24 characters' })
-  firstname: string;
+  fullname: string;
 
   @IsNotEmpty({ message: 'Password is required' })
   @IsString({ message: 'Password must be a string' })
