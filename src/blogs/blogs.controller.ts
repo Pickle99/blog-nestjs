@@ -14,7 +14,7 @@ import {
 import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { Request } from 'express';
 
@@ -32,6 +32,7 @@ export class BlogsController {
   }
 
   @Get()
+  @CacheKey('blogs')
   async getBlogs(
     @Query('title') title?: string,
     @Query('description') description?: string,

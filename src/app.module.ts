@@ -9,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
-import { redisStore } from 'cache-manager-redis-yet';
+import KeyvRedis, { Keyv } from '@keyv/redis';
 
 @Module({
   imports: [
@@ -23,10 +23,14 @@ import { redisStore } from 'cache-manager-redis-yet';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '4h' },
     }),
-    CacheModule.register({
+    CacheModule.registerAsync({
       isGlobal: true,
-      ttl: 1000 * 1000,
-      store: redisStore,
+      useFactory: async () => {
+        return {
+          ttl: 1000 * 1000,
+          stores: [new Keyv(new KeyvRedis('redis://localhost:6379'))],
+        };
+      },
     }),
   ],
   controllers: [AppController],
