@@ -60,7 +60,7 @@ export class AuthService {
   async login(loginRequest: LoginDto) {
     const user = await this.userRepository.findOne({
       where: { username: loginRequest.username },
-      select: ['username', 'password'],
+      select: ['id', 'fullname', 'username', 'password'],
     });
 
     if (loginRequest.username !== user?.username) {
