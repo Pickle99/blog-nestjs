@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 import { Cache } from 'cache-manager';
@@ -138,8 +144,45 @@ export class BlogsService {
     };
   }
 
-  async update(id: number, updateBlogDto: UpdateBlogDto) {
-    return `This action updates a #${id} blog`;
+  async update(
+    id: number,
+    updateBlogRequest: UpdateBlogDto,
+    userId: number,
+  ): Promise<object> {
+    // Find the existing blog by id to ensure it exists
+    const existingBlog = await this.blogRepository.findOne({
+      where: { id },
+    });
+
+    if (!existingBlog) {
+      throw new HttpException(
+        'Blog with given id not found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (existingBlog.user_id !== userId) {
+      throw new HttpException(
+        'Updating the blog of another user is forbidden',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    // Prepare the data to update from the request
+    const dataToUpdate: Partial<UpdateBlogDto> = {};
+
+    // Only update the fields that are provided in the request
+    if (updateBlogRequest.title) {
+      dataToUpdate.title = updateBlogRequest.title;
+    }
+    if (updateBlogRequest.description) {
+      dataToUpdate.description = updateBlogRequest.description;
+    }
+
+    const updatedBlog = this.blogRepository.merge(existingBlog, dataToUpdate);
+
+    await this.blogRepository.save(updatedBlog);
+
+    return updatedBlog;
   }
 
   async delete(id: number) {

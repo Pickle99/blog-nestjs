@@ -60,12 +60,17 @@ export class BlogsController {
     return this.blogsService.show(+id); // Wrote `+` to transform string to number for function inside service. Keeping it as a string for request is easier
   }
 
-  // Using Patch here instead of Put, since Patch request used to Update the fields, while Put creates or replaces the fields/data entirely
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
-    return this.blogsService.update(+id, updateBlogDto);
+  @Patch(':id') // Using Patch here instead of Put, since Patch request used to Update the fields, while Put creates or replaces the fields/data entirely
+  update(
+    @Param('id') id: string,
+    @Body() updateBlogRequest: UpdateBlogDto,
+    @Req() req: Request,
+  ) {
+    const user = req.user;
+    return this.blogsService.update(+id, updateBlogRequest, user.id);
   }
+
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
