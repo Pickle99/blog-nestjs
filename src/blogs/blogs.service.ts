@@ -14,7 +14,7 @@ export class BlogsService {
     @InjectRepository(Blog) private blogRepository: Repository<Blog>,
   ) {}
 
-  async store(blogRequest: CreateBlogDto, user_id: number) {
+  async store(blogRequest: CreateBlogDto, user_id: number): Promise<object> {
     const blog = this.blogRepository.create({
       title: blogRequest.title,
       description: blogRequest.description,
