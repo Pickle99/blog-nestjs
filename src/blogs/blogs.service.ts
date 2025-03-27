@@ -154,16 +154,28 @@ export class BlogsService {
       where: { id },
     });
 
+    if (existingBlog?.user_id !== userId) {
+      throw new HttpException(
+        'Updating the blog of another user is forbidden',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const blogWithAlreadyExistedTitle = await this.blogRepository.findOne({
+      where: { title: updateBlogRequest.title },
+    });
+
+    if (blogWithAlreadyExistedTitle) {
+      throw new HttpException(
+        'Blog with title like this already exists',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     if (!existingBlog) {
       throw new HttpException(
         'Blog with given id not found',
         HttpStatus.NOT_FOUND,
-      );
-    }
-    if (existingBlog.user_id !== userId) {
-      throw new HttpException(
-        'Updating the blog of another user is forbidden',
-        HttpStatus.FORBIDDEN,
       );
     }
 
