@@ -17,9 +17,9 @@ export class AuthController {
     return this.authService.login(loginRequest);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get('test')
-  // async login4(@Body() loginRequest: LoginDto) {
-  //   return this.authService.bad(loginRequest);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Get('test')
+  async login4(@Body() loginRequest: LoginDto) {
+    return this.authService.bad(loginRequest);
+  }
 }

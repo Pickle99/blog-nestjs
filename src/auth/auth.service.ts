@@ -24,7 +24,7 @@ export class AuthService {
   private generateAccessToken(user: User) {
     const payload = { username: user.username, id: user.id };
     return this.jwtService.sign(payload, {
-      secret: 'secretkeyofmine',
+      secret: process.env.JWT_SECRET,
       expiresIn: '1h',
     });
   }
@@ -93,7 +93,7 @@ export class AuthService {
     };
   }
 
-  // async bad(loginRequest) {
-  //   return '2';
-  // }
+  async bad(loginRequest) {
+    return '2';
+  }
 }
