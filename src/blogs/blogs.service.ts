@@ -20,7 +20,7 @@ interface ShowBlogQueryParams {
 @Injectable()
 export class BlogsService {
   constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache | undefined, // Ensure Cache is optional
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectRepository(Blog) private blogRepository: Repository<Blog>,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
