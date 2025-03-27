@@ -11,7 +11,7 @@ export class User {
   @Column({ type: 'varchar', length: 24 })
   fullname: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, select: false }) // Excluding the password manually with select:false so we wont see the password in relations
   password: string;
 
   @OneToMany(() => Blog, (blog) => blog.user) // Define the relationship: one user to many blogs

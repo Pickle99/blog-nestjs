@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
@@ -31,15 +32,35 @@ export class BlogsController {
   }
 
   @Get()
-  findAll() {
-    return this.blogsService.findAll();
+  async getBlogs(
+    @Query('title') title?: string,
+    @Query('description') description?: string,
+    @Query('created_at_sort') created_at_sort?: string,
+    @Query('updated_at_sort') updated_at_sort?: string,
+    @Query('user_id') user_id?: number,
+    @Query('author') author?: string,
+  ) {
+    const blogs = await this.blogsService.getBlogs({
+      title,
+      description,
+      created_at_sort,
+      updated_at_sort,
+      user_id,
+      author,
+    });
+
+    return {
+      message: 'Blogs retrieved successfully',
+      data: blogs,
+    };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.blogsService.findOne(+id);
+  show(@Param('id') id: string) {
+    return this.blogsService.show(+id); // Wrote `+` to transform string to number for function inside service. Keeping it as a string for request is easier
   }
 
+  // Using Patch here instead of Put, since Patch request used to Update the fields, while Put creates or replaces the fields/data entirely
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
@@ -48,6 +69,6 @@ export class BlogsController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.blogsService.remove(+id);
+    return this.blogsService.delete(+id);
   }
 }

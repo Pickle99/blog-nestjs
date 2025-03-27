@@ -88,8 +88,4 @@ export class AuthService {
       access_token: accessToken,
     };
   }
-
-  async bad(loginRequest) {
-    return '2';
-  }
 }
