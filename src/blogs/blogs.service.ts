@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 
 @Injectable()
 export class BlogsService {
+  constructor(@Inject('CACHE_MANAGER') private cacheManager: Cache) {}
+
   create(createBlogDto: CreateBlogDto) {
     return 'This action adds a new blog';
   }

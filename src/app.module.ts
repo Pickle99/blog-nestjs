@@ -8,6 +8,8 @@ import { dataSourceOptions } from 'database/data-source';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 @Module({
   imports: [
@@ -20,6 +22,11 @@ import { JwtModule } from '@nestjs/jwt';
       global: true,
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '4h' },
+    }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 1000 * 1000,
+      store: redisStore,
     }),
   ],
   controllers: [AppController],
