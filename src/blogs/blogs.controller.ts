@@ -73,7 +73,8 @@ export class BlogsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.blogsService.delete(+id);
+  remove(@Param('id') id: string, @Req() req: Request) {
+    const user = req.user;
+    return this.blogsService.delete(+id, user.id);
   }
 }

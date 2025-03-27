@@ -197,7 +197,30 @@ export class BlogsService {
     return updatedBlog;
   }
 
-  async delete(id: number) {
-    return `This action removes a #${id} blog`;
+  async delete(id: number, userId: number): Promise<object> {
+    const blog = await this.blogRepository.findOne({
+      where: { id },
+    });
+
+    if (!blog) {
+      throw new HttpException(
+        'Blog with given id not found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (blog?.user_id !== userId) {
+      throw new HttpException(
+        'Deleting the blog of another user is forbidden',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    await this.blogRepository.delete(id);
+
+    return {
+      success: true,
+      message: `Your blog named ${blog.title} Deleted`,
+    };
   }
 }
