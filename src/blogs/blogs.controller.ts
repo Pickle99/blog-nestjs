@@ -39,6 +39,8 @@ export class BlogsController {
     @Query('updated_at_sort') updated_at_sort?: string,
     @Query('user_id') user_id?: number,
     @Query('author') author?: string,
+    @Query('paginate') paginate?: string,
+    @Query('page') page?: string,
   ) {
     const blogs = await this.blogsService.getBlogs({
       title,
@@ -47,6 +49,8 @@ export class BlogsController {
       updated_at_sort,
       user_id,
       author,
+      paginate,
+      page,
     });
 
     return {

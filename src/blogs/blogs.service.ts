@@ -21,6 +21,8 @@ interface ShowBlogQueryParams {
   updated_at_sort?: string;
   user_id?: number;
   author?: string;
+  paginate?: string;
+  page?: string;
 }
 
 @Injectable()
@@ -66,7 +68,9 @@ export class BlogsService {
       updated_at_sort,
       user_id,
       author,
+      paginate = 10, // Default pagination to 10
     } = query;
+
     const filters: any = {};
 
     // Case-insensitive search
@@ -85,13 +89,11 @@ export class BlogsService {
         created_at_sort.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
     }
 
-    // Handle sorting by updated date (asc/desc)
     if (updated_at_sort) {
       order.updated_at =
         updated_at_sort.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
     }
 
-    // Filtering by user_id
     if (user_id) {
       filters.user_id = user_id;
     }
@@ -108,14 +110,19 @@ export class BlogsService {
         );
       }
 
-      // Filter blogs by the user's ID
       filters.user_id = user.id;
     }
 
-    const blogs = await this.blogRepository.find({
+    const page = Number(query.page) || 1; // Default to page 1 if no page is specified
+    const take = Number(paginate); // Default to 10 if paginate is not provided
+    const skip = (page - 1) * take;
+
+    const [blogs, total] = await this.blogRepository.findAndCount({
       where: filters,
       order,
       relations: ['user'], // Ensure the related user (author) is included
+      skip,
+      take,
     });
 
     // If no blogs found, return 404
@@ -123,7 +130,13 @@ export class BlogsService {
       throw new HttpException('No blogs found', HttpStatus.NOT_FOUND);
     }
 
-    return blogs;
+    // Return paginated blogs along with total count for pagination info
+    return {
+      data: blogs,
+      total,
+      page,
+      paginate: take,
+    };
   }
 
   async show(id: number): Promise<object> {
