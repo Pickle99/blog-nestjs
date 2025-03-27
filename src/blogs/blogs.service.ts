@@ -133,6 +133,20 @@ export class BlogsService {
     };
   }
 
+  async getAllBlogs(): Promise<object> {
+    const blogs = await this.blogRepository.find({
+      relations: ['user'],
+    });
+
+    if (!blogs) {
+      throw new HttpException('There is no blogs yet', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      blogs,
+    };
+  }
+
   async show(id: number): Promise<object> {
     const data = await this.blogRepository.findOne({
       where: {
@@ -201,6 +215,8 @@ export class BlogsService {
 
     await this.blogRepository.save(updatedBlog);
 
+    await this.cacheManager.del('all-blogs');
+
     return updatedBlog;
   }
 
@@ -224,6 +240,8 @@ export class BlogsService {
     }
 
     await this.blogRepository.delete(id);
+
+    await this.cacheManager.del('all-blogs');
 
     return {
       success: true,

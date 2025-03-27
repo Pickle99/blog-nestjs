@@ -18,8 +18,6 @@ import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { Request } from 'express';
 
-@UseInterceptors(CacheInterceptor)
-// with using the interceptor, Get requests will be cached manually after first request
 @Controller('blogs')
 export class BlogsController {
   constructor(private readonly blogsService: BlogsService) {}
@@ -58,6 +56,14 @@ export class BlogsController {
       message: 'Blogs retrieved successfully',
       data: blogs,
     };
+  }
+
+  @UseInterceptors(CacheInterceptor)
+  // with using the interceptor, current request will be cached manually after first request
+  @Get('all')
+  @CacheKey('all-blogs')
+  getAllBlogs() {
+    return this.blogsService.getAllBlogs();
   }
 
   @Get(':id')
