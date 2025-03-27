@@ -17,7 +17,7 @@ export class Blog {
   @Column({ type: 'number' })
   user_id: number;
 
-  @Column({ type: 'varchar', length: 120 })
+  @Column({ type: 'varchar', length: 120, unique: true })
   title: string;
 
   @Column({ type: 'varchar', length: 255 })

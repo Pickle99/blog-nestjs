@@ -62,10 +62,6 @@ export class AuthService {
       where: { username: loginRequest.username },
     });
 
-    // if (!user) {
-    //   throw new BadRequestException('Invalid username or password');
-    // }
-
     if (loginRequest.username !== user?.username) {
       throw new HttpException(
         'Invalid username or password',
