@@ -28,12 +28,6 @@ export class BlogsService {
   ) {}
 
   async store(blogRequest: CreateBlogDto, user_id: number): Promise<object> {
-    const blog = this.blogRepository.create({
-      title: blogRequest.title,
-      description: blogRequest.description,
-      user_id,
-    });
-
     const foundBlog = await this.blogRepository.findOne({
       where: { title: blogRequest.title },
     });
@@ -44,6 +38,12 @@ export class BlogsService {
         HttpStatus.FORBIDDEN,
       );
     }
+
+    const blog = this.blogRepository.create({
+      title: blogRequest.title,
+      description: blogRequest.description,
+      user_id,
+    });
 
     await this.blogRepository.save(blog);
 
@@ -175,6 +175,13 @@ export class BlogsService {
       where: { id },
     });
 
+    if (!existingBlog) {
+      throw new HttpException(
+        'Blog with given id not found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     if (existingBlog?.user_id !== userId) {
       throw new HttpException(
         'Updating the blog of another user is forbidden',
@@ -190,13 +197,6 @@ export class BlogsService {
       throw new HttpException(
         'Blog with title like this already exists',
         HttpStatus.CONFLICT,
-      );
-    }
-
-    if (!existingBlog) {
-      throw new HttpException(
-        'Blog with given id not found',
-        HttpStatus.NOT_FOUND,
       );
     }
 

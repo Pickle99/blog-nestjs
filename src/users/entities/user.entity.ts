@@ -1,4 +1,4 @@
-import { Blog } from 'src/blogs/entities/blog.entity';
+import { Blog } from '../../blogs/entities/blog.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 @Entity({ name: 'users' }) // Setting up different name for table name
 export class User {

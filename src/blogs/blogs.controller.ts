@@ -15,7 +15,7 @@ import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { Request } from 'express';
 
 @Controller('blogs')
