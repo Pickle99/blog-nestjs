@@ -7,8 +7,10 @@ import {
   MinLength,
   IsOptional,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateBlogDto extends PartialType(CreateBlogDto) {
+  @ApiProperty({ example: 'The title of the blog to update' })
   // Made the fields optional, so the validations will apply only if fields is provided, we can update each of the field, or all together
   @IsOptional()
   @IsNotEmpty({ message: 'Title is required' })
@@ -17,6 +19,9 @@ export class UpdateBlogDto extends PartialType(CreateBlogDto) {
   @MaxLength(120, { message: 'Title cannot exceed 120 characters' })
   title?: string;
 
+  @ApiProperty({
+    example: 'The description of the blog to update, lorem ipsum dolor dolor',
+  })
   @IsOptional()
   @IsNotEmpty({ message: 'Description is required' })
   @IsString({ message: 'Description must be a string' })
