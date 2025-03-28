@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from '../auth.controller';
-import { AuthService } from '../auth.service';
+import { UsersController } from '../users.controller';
+import { UsersService } from '../users.service';
 import { LoginDto, SignupDto } from '../dto/auth.dto';
 import { ConflictException, HttpException } from '@nestjs/common';
 
-describe('AuthController', () => {
-  let authController: AuthController;
-  let authService: AuthService;
+describe('UsersController', () => {
+  let userController: UsersController;
+  let userService: UsersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController],
+      controllers: [UsersController],
       providers: [
         {
-          provide: AuthService,
+          provide: UsersService,
           useValue: {
             signup: jest.fn(),
             login: jest.fn(),
@@ -22,8 +22,8 @@ describe('AuthController', () => {
       ],
     }).compile();
 
-    authController = module.get<AuthController>(AuthController);
-    authService = module.get<AuthService>(AuthService);
+    userController = module.get<UsersController>(UsersController);
+    userService = module.get<UsersService>(UsersService);
   });
 
   describe('signup', () => {
@@ -39,9 +39,9 @@ describe('AuthController', () => {
         accessToken: 'jwt-token',
       };
 
-      jest.spyOn(authService, 'signup').mockResolvedValue(result);
+      jest.spyOn(userService, 'signup').mockResolvedValue(result);
 
-      expect(await authController.signup(signupRequest)).toEqual(result);
+      expect(await userController.signup(signupRequest)).toEqual(result);
     });
 
     it('should throw ConflictException if the username is already taken', async () => {
@@ -52,9 +52,9 @@ describe('AuthController', () => {
       };
 
       const conflictError = new ConflictException('Username is already taken');
-      jest.spyOn(authService, 'signup').mockRejectedValue(conflictError);
+      jest.spyOn(userService, 'signup').mockRejectedValue(conflictError);
 
-      await expect(authController.signup(signupRequest)).rejects.toThrow(
+      await expect(userController.signup(signupRequest)).rejects.toThrow(
         ConflictException,
       );
     });
@@ -72,9 +72,9 @@ describe('AuthController', () => {
         access_token: 'jwt-token',
       };
 
-      jest.spyOn(authService, 'login').mockResolvedValue(result);
+      jest.spyOn(userService, 'login').mockResolvedValue(result);
 
-      expect(await authController.login(loginRequest)).toEqual(result);
+      expect(await userController.login(loginRequest)).toEqual(result);
     });
 
     it('should throw HttpException if username or password is incorrect', async () => {
@@ -84,9 +84,9 @@ describe('AuthController', () => {
       };
 
       const error = new HttpException('Invalid username or password', 400);
-      jest.spyOn(authService, 'login').mockRejectedValue(error);
+      jest.spyOn(userService, 'login').mockRejectedValue(error);
 
-      await expect(authController.login(loginRequest)).rejects.toThrow(
+      await expect(userController.login(loginRequest)).rejects.toThrow(
         HttpException,
       );
     });

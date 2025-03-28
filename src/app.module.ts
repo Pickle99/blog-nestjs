@@ -6,7 +6,6 @@ import { BlogsModule } from './blogs/blogs.module';
 import { ConfigModule } from '@nestjs/config';
 import { dataSourceOptions } from 'database/data-source';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
 import KeyvRedis, { Keyv } from '@keyv/redis';
@@ -17,7 +16,6 @@ import KeyvRedis, { Keyv } from '@keyv/redis';
     UsersModule,
     BlogsModule,
     TypeOrmModule.forRoot(dataSourceOptions),
-    AuthModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
