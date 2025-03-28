@@ -3,7 +3,8 @@ Node >=20 (20 on dev) <br/>
 Postgres >=17 (17 on dev)
 
 ## API documentation
-API documentation can be accessed on /api endpoint, which is made from Swagger
+API documentation can be accessed on /api endpoint, which is made from Swagger <br/>
+example: `` http://localhost:8000/api ``
 
 ## Starting the app
 
