@@ -14,6 +14,8 @@ to run the unit tests, write <br/> `` npm run test `` <br/>
 
 ## Additional notes
 
-Everything from Auth must go to User folder, User folder is empty right now, i noticed it only in the end, i will refactor the code to work from User folder and not from auth a little bit later
+Everything from Auth must go to User folder, User folder is empty right now, i noticed it only in the end, i will refactor the code to work from User folder and not from auth a little bit later.
 
-Also it could be a good idea to use Docker, since i had a problems to run the app from node 18
+It could be a good idea as well to use Docker, since i had a problems to run the app from node 18.
+
+Also it could be a good idea to start endpoints via /api , however i decided to not, since its not really important in this app
