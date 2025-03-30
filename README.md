@@ -1,6 +1,7 @@
 ## Requirements
 Node >=20 (20 on dev) <br/>
 Postgres >=17 (17 on dev)
+Redis / Redis CLI
 
 ## API documentation
 API documentation can be accessed on /api endpoint, which is made from Swagger <br/>
