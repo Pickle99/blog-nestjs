@@ -1,6 +1,6 @@
 ## Requirements
 Node >=20 (20 on dev) <br/>
-Postgres >=17 (17 on dev)
+Postgres >=17 (17 on dev) <br/>
 Redis / Redis CLI
 
 ## API documentation
